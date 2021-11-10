@@ -21,29 +21,29 @@ public class EmployeeRepository {
 
 
     public EmployeeRepository(RedisTemplate redisTemplate) {
-        this.listOperations = redisTemplate.opsForList();
+        this.setOperations = redisTemplate.opsForSet();
         this.redisTemplate = redisTemplate;
 
     }
 
     public void saveEmployee(Employee employee){
-        listOperations.rightPush(employee.getId(), employee);
+        setOperations.add(employee.getId(), employee);
 
     }
 //    public List<Employee> findAll(){
 //
-//        return  listOperations.
+//        return hashOperations.values("EMPLOYEE");
 //    }
     public Employee findById(Integer id){
 
-        return (Employee) listOperations.range(id, 0, -1);
+        return (Employee) setOperations.members(id);
     }
 
     public void update(Employee employee){
         saveEmployee(employee);
     }
     public void delete(Integer id){
-        listOperations.remove(id,0,Employee.class);
+        setOperations.pop(id);
     }
 
 }
